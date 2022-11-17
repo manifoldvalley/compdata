@@ -23,8 +23,10 @@ module Data.Comp.SubsumeCommon
     , Pos (..)
     , Emb (..)
     , Choose
+    , UnsafeChoose
     , Sum'
     , Proxy (..)
+    , Or
     ) where
 
 -- | This type is used in its promoted form only. It represents
@@ -50,6 +52,12 @@ type family Choose (e1 :: Emb) (r :: Emb) :: Emb where
     Choose x (Found y) = Found (Ri y)
     Choose x y = NotFound
 
+type family UnsafeChoose (e1 :: Emb) (r :: Emb) :: Emb where
+    UnsafeChoose x (Found y) = Found (Ri y)
+    UnsafeChoose (Found x) y = Found (Le x)
+    UnsafeChoose Ambiguous y = y
+    UnsafeChoose x Ambiguous = x
+    UnsafeChoose x y = NotFound
 
 type family Sum' (e1 :: Emb) (r :: Emb) :: Emb where
     Sum' (Found x) (Found y) = Found (Sum x y)
@@ -152,7 +160,7 @@ type Dupl s = Dupl' (ToList '[s])
 -- | This type family checks whether the list of positions given as an
 -- argument contains any duplicates.
 type family Dupl' (s :: [Pos]) :: Bool where
-    Dupl' (Nowhere ': r) = False
+    Dupl' (Nowhere ': r) = Dupl' r
     Dupl' (p ': r) = OrDupl' (Find p r) r
     Dupl' '[] = False
 
@@ -168,3 +176,8 @@ type family Find (p :: Pos) (s :: [Pos]) :: Bool where
 type family OrDupl' (a :: Bool) (b :: [Pos]) :: Bool where
     OrDupl'  True  c  = True
     OrDupl'  False c  = Dupl' c
+
+type family Or (p :: Bool) (q :: Bool) :: Bool where
+    Or True f = True
+    Or False f = f
+
