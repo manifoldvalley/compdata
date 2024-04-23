@@ -22,6 +22,7 @@ module Data.Comp.Multi (
   , module Data.Comp.Multi.Annotation
   , module Data.Comp.Multi.Equality
   , module Data.Comp.Multi.Generic
+  , module Data.Comp.Multi.SummandIndex
     ) where
 
 import Data.Comp.Multi.Algebra
@@ -31,6 +32,7 @@ import Data.Comp.Multi.Generic
 import Data.Comp.Multi.HFunctor
 import Data.Comp.Multi.Sum
 import Data.Comp.Multi.Term
+import Data.Comp.Multi.SummandIndex
 
 {- $ex1
 The example illustrates how to use generalised compositional data types

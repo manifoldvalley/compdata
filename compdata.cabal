@@ -167,6 +167,7 @@ library
                         Data.Comp.Multi.Projection
                         Data.Comp.Multi.LowerOrder
                         Data.Comp.Multi.Multi.Projection
+                        Data.Comp.Multi.SummandIndex
 
   Other-Modules:        Data.Comp.SubsumeCommon
                         Data.Comp.Derive.Equality
