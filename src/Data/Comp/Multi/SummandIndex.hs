@@ -20,8 +20,10 @@ type family SummandSize (f :: (Type -> Type) -> Type -> Type) where
 
 
 summandSize :: forall (f :: (Type -> Type) -> Type -> Type) (num :: Type) . (Integral num, KnownNat (SummandSize f)) => (Proxy f) -> num
-summandSize (pr :: Proxy f) = fromIntegral $ natVal (P :: Proxy (SummandSize f))
+summandSize (_pr :: Proxy f) = fromIntegral $ natVal (P :: Proxy (SummandSize f))
 
+getSummandIndex :: forall f g a i . (f :<: g, SummandIndex (ComprEmb (Elem f g)) f g) => Proxy g -> f a i -> Int
+getSummandIndex pr = summandIndex pr (P :: Proxy (ComprEmb (Elem f g)))
 
 class SummandIndex p (f :: (Type -> Type) -> Type -> Type) (g :: (Type -> Type) -> Type -> Type) where
     summandIndex :: Proxy g -> Proxy p -> f a i -> Int
@@ -43,3 +45,4 @@ instance (SummandIndex (Found p1) f1 g, SummandIndex (Found p2) f2 g)
     => SummandIndex (Found (Sum p1 p2)) (f1 :+: f2) g where
     summandIndex _ _ (Inl x) = summandIndex (P :: Proxy g) (P :: Proxy (Found p1)) x
     summandIndex _ _ (Inr x) = summandIndex (P :: Proxy g) (P :: Proxy (Found p2)) x
+
