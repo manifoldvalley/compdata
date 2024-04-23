@@ -12,6 +12,7 @@ import Data.Kind
 import Data.Comp.Multi.Ops
 import Data.Comp.SubsumeCommon
 import GHC.TypeLits
+import qualified Data.Proxy as P
 
 
 type family SummandSize (f :: (Type -> Type) -> Type -> Type) where
@@ -22,8 +23,8 @@ type family SummandSize (f :: (Type -> Type) -> Type -> Type) where
 summandSize :: forall (f :: (Type -> Type) -> Type -> Type) (num :: Type) . (Integral num, KnownNat (SummandSize f)) => (Proxy f) -> num
 summandSize (_pr :: Proxy f) = fromIntegral $ natVal (P :: Proxy (SummandSize f))
 
-getSummandIndex :: forall f g a i . (f :<: g, SummandIndex (ComprEmb (Elem f g)) f g) => Proxy g -> f a i -> Int
-getSummandIndex pr = summandIndex pr (P :: Proxy (ComprEmb (Elem f g)))
+getSummandIndex :: forall f g a i . (f :<: g, SummandIndex (ComprEmb (Elem f g)) f g) => P.Proxy g -> f a i -> Int
+getSummandIndex _pr = summandIndex (P :: Proxy g) (P :: Proxy (ComprEmb (Elem f g)))
 
 class SummandIndex p (f :: (Type -> Type) -> Type -> Type) (g :: (Type -> Type) -> Type -> Type) where
     summandIndex :: Proxy g -> Proxy p -> f a i -> Int
